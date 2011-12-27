@@ -232,13 +232,15 @@ var menus = {
         {
             label: 'every 1/[number:30] of a second', 
             trigger: true, 
-            script: '(function(){var count = 0; setInterval(function(){count++; local.count = count;[[next]]},1000/{{1}})})();'
+            script: '(function(){var count = 0; setInterval(function(){count++; local.count = count;[[next]]},1000/{{1}})})();',
+            locals: [
+                {
+                    label: 'count',
+                    script: 'local.count',
+                    type: 'number'
+                }
+            ]
         },
-        {
-            label: 'count',
-            script: 'local.count',
-            type: 'number'
-        },            
         {
             label: 'wait [number:1] secs', 
             script: 'setTimeout(function(){[[next]]},1000*{{1}});'
@@ -246,12 +248,14 @@ var menus = {
         {
             label: 'repeat [number:10]', 
             containers: 1, 
-            script: 'range({{1}}).forEach(function(idx, item){local.index = idx; local.last_var = item;[[1]]});'
-        },
-        {
-            label: 'loop index',
-            script: 'local.index',
-            type: 'number'
+            script: 'range({{1}}).forEach(function(idx, item){local.index = idx; local.last_var = item;[[1]]});',
+            locals: [
+                {
+                    label: 'loop index',
+                    script: 'local.index',
+                    type: 'number'
+                }
+            ]
         },
         {
             label: 'broadcast [string:ack] message', 
@@ -291,7 +295,19 @@ var menus = {
     array: menu('Arrays', [
         {
             label: 'new array',
-            script: 'local.last_var = [];'
+            script: 'local.last_var = [];',
+            locals: [
+                {
+                    label: 'new array',
+                    script: 'local.get("array", this.name)',
+                    type: 'array'
+                },
+                {
+                    label: 'length',
+                    script: 'local.get("array", this.name).length',
+                    type: 'number'
+                }
+            ]
         },
         {
             label: 'new array named [string]',

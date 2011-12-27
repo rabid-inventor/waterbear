@@ -105,6 +105,26 @@
     width: 20px;
 }
 
+.locals {
+    display: block;
+    background-color: white;
+    width: auto;
+    position: relative;
+    padding: 1px 3px 1px;
+    margin: 5px 10px;
+    overflow: auto;
+    height: auto;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border-color: inherit;
+}
+
+.locals > .wrapper{
+    float: left;
+    margin: 5px;
+}
+
 
 .contained {
   display: block;
@@ -125,6 +145,13 @@
   border-style: solid;
   border-color: inherit;
   right: -2px;
+}
+
+.collapsed{
+    text-align: center;
+    background-color: white;
+    padding: 0;
+    margin-bottom: 7px;
 }
 
 
