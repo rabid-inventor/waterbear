@@ -56,6 +56,9 @@ $.extend($.fn,{
   socket_blocks: function(){
       return this.find('> .block > .blockhead > .label').children('.socket, .autosocket').children('input, select, .wrapper');
   },
+  local_blocks: function(){
+      return this.find('> .block > .locals > .wrapper');
+  },
   next_block: function(){
       return this.find('> .next > .wrapper');
   },
@@ -99,6 +102,7 @@ $.fn.extend({
         if (this.is('.function')){ desc['type'] = 'function';}
         if (this.is('.boolean')){ desc['type'] = 'boolean'; }
         if (this.is('.color')){ desc['type'] = 'color'; }
+        desc.locals = this.local_blocks().map(function(){return $(this).block_description();}).get();
         desc.sockets = this.socket_blocks().map(function(){return $(this).block_description();}).get();
         desc.contained = this.child_blocks().map(function(){return $(this).block_description();}).get();
         desc.next = this.next_block().block_description();
@@ -130,6 +134,7 @@ function Block(options){
         flap: true, // something can come before
         containers: 0,  // Something cannot be inside
         label: 'Step', // label is its own mini-language
+        locals: [],
         type: null
     };
     $.extend(opts, options);
@@ -159,8 +164,17 @@ function Block(options){
         block.append('<b class="flap"></b>');
         wrapper.addClass('step');
     }
+    if (opts.locals.length){
+        var locals_container = $('<div class="locals block_menu"></div>');
+        $.each(opts.locals, function(idx, value){
+            if ($.isPlainObject(value)){
+                locals_container.append(Block(value));
+            }
+        });
+        block.append(locals_container);
+    }
     for (var i = 0; i < opts.containers; i++){
-        block.append('</b><span class="contained"><i class="slot"></i></span>');
+        block.append('<span class="contained"><i class="slot"></i></span>');
     }
     if (opts.containers){
         block.find('> .blockhead > .label').prepend('<span class="disclosure open">▼</span>');
@@ -207,11 +221,12 @@ function Block(options){
 $('.scripts_workspace').delegate('.disclosure', 'click', function(event){
     var self = $(event.target);
     if (self.is('.open')){
-        self.text('►').closest('.block').find('> .contained').hide();
+        self.text('►').closest('.block').find('> .contained, > .locals').hide().end().append('<div class="collapsed">• • •</div>');
     }else{
-        self.text('▼').closest('.block').find('> .contained').show();
+        self.text('▼').closest('.block').find('> .contained, > .locals').show().end().find('> .collapsed').remove();
     }
     self.toggleClass('open closed');
+    return false;
 });
 
         
