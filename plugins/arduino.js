@@ -654,6 +654,15 @@ var menus = {
             script: "Serial.end();"
         }
     ])
+    serial: menu('Extra', [
+        {
+          label: 'This is a test block created to understand! ',
+          type: 'string',
+          script: "Boo;"
+        },
+        
+        
+    ])
 
 };
 
